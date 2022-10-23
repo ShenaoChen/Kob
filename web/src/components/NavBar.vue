@@ -26,7 +26,7 @@
           </ul>
         </li>
       </ul>
-      <ul class="navbar-nav" v-else>
+      <ul class="navbar-nav" v-else-if="!$store.state.user.pulling_info">
         <li class="nav-item dropdown">
           <router-link class="nav-link" :to="{name: 'user_account_login'}">登录</router-link>
         </li>

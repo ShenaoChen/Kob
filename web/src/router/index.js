@@ -6,7 +6,7 @@ import UserBotIndexView from '@/views/user/bot/UserBotIndexView'
 import NotFound from '@/views/error/NotFound'
 import UserAccountLoginView from '@/views/user/account/UserAccountLoginView'
 import UserAccountRegisterView from '@/views/user/account/UserAccountRegisterView'
-import store from '@/store/user'
+import store from '@/store/index'
 
 const routes = [
   {
@@ -84,8 +84,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requestAuth && !store.state.is_login) {
-    next({name: 'user_accoutn_login'});
+  if (to.meta.requestAuth && !store.state.user.is_login) {
+    next({name: 'user_account_login'});
   } else {
     next();
   }
