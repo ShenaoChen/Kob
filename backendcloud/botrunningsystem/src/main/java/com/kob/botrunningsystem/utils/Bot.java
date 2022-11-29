@@ -39,6 +39,7 @@ public class Bot implements com.kob.botrunningsystem.utils.BotInterface {
 
     @Override
     public Integer nextMove(String input) {
+        Integer res = 0;
         String[] strs = input.split("#");
         int[][] g = new int[13][14];
         for (int i = 0, k = 0; i < 13; i ++ ) {
@@ -59,14 +60,25 @@ public class Bot implements com.kob.botrunningsystem.utils.BotInterface {
         for (Cell c: bCells) g[c.x][c.y] = 1;
 
         int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        int mx = 0;
         for (int i = 0; i < 4; i ++ ) {
             int x = aCells.get(aCells.size() - 1).x + dx[i];
             int y = aCells.get(aCells.size() - 1).y + dy[i];
             if (x >= 0 && x < 13 && y >= 0 && y < 14 && g[x][y] == 0) {
-                return i;
+                int cnt = 0;
+                for (int j = 0; j < 4; j++) {
+                    int nx = x + dx[j];
+                    int ny = y + dy[j];
+                    if (nx >= 0 && nx < 13 && ny >= 0 && ny < 14 && g[nx][ny] == 0) {
+                        cnt++;
+                    }
+                }
+                if (cnt >= mx) {
+                    mx = cnt;
+                    res = i;
+                }
             }
         }
-
-        return 0;
+        return res;
     }
 }
