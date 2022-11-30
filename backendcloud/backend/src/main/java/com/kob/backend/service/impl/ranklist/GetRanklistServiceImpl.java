@@ -10,6 +10,7 @@ import com.kob.backend.service.ranklist.GetRanklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,9 +22,14 @@ public class GetRanklistServiceImpl implements GetRanklistService {
         IPage<User> userIPage = new Page<>(page,10);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("rating");
-        List<User> users = userMapper.selectPage(userIPage, queryWrapper).getRecords();
-        for (User user : users)
+        List<User> tmp = userMapper.selectPage(userIPage, queryWrapper).getRecords();
+        List<User> users = new ArrayList<>();
+        for (User user : tmp) {
             user.setPassword("");
+            if (!user.getId().equals(0)) {
+                users.add(user);
+            }
+        }
         JSONObject resp = new JSONObject();
         resp.put("users", users);
         resp.put("users_count", userMapper.selectCount(null));

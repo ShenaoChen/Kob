@@ -18,6 +18,7 @@ public class ReceiveBotMoveController {
     public String receiveBotMove(@RequestParam MultiValueMap<String, String> data) {
         Integer userId = Integer.parseInt(Objects.requireNonNull(data.getFirst("user_id")));
         Integer direction = Integer.parseInt(Objects.requireNonNull(data.getFirst("direction")));
-        return receiveBotMoveService.receiveBotMove(userId, direction);
+        Integer isPvp = Integer.parseInt(Objects.requireNonNull(data.getFirst("is_pvp")));
+        return receiveBotMoveService.receiveBotMove(userId, direction, isPvp);
     }
 }

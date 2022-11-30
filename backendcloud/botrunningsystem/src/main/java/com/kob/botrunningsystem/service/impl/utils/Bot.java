@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Bot {
     Integer userId;
+    Integer isPvp;
     String botCode;
     String input;
 }

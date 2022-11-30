@@ -1,43 +1,12 @@
 package com.kob.botrunningsystem.utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class Bot implements com.kob.botrunningsystem.utils.BotInterface {
-    static class Cell {
-        public int x, y;
-        public Cell(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    private boolean check_tail_increasing(int step) {  // 检验当前回合，蛇的长度是否增加
-        if (step <= 10) return true;
-        return step % 3 == 1;
-    }
-
-    public List<Cell> getCells(int sx, int sy, String steps) {
-        steps = steps.substring(1, steps.length() - 1);
-        List<Cell> res = new ArrayList<>();
-
-        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
-        int x = sx, y = sy;
-        int step = 0;
-        res.add(new Cell(x, y));
-        for (int i = 0; i < steps.length(); i ++ ) {
-            int d = steps.charAt(i) - '0';
-            x += dx[d];
-            y += dy[d];
-            res.add(new Cell(x, y));
-            if (!check_tail_increasing( ++ step)) {
-                res.remove(0);
-            }
-        }
-        return res;
-    }
-
-    @Override
+public class Bot implements java.util.function.Supplier<Integer> {
     public Integer nextMove(String input) {
         Integer res = 0;
         String[] strs = input.split("#");
@@ -77,6 +46,50 @@ public class Bot implements com.kob.botrunningsystem.utils.BotInterface {
                     mx = cnt;
                     res = i;
                 }
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public Integer get() {
+        File file = new File("input.txt");
+        try {
+            Scanner sc = new Scanner(file);
+            return nextMove(sc.next());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    static class Cell {
+        public int x, y;
+        public Cell(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    private boolean check_tail_increasing(int step) {  // 检验当前回合，蛇的长度是否增加
+        if (step <= 10) return true;
+        return step % 3 == 1;
+    }
+
+    public List<Cell> getCells(int sx, int sy, String steps) {
+        steps = steps.substring(1, steps.length() - 1);
+        List<Cell> res = new ArrayList<>();
+
+        int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
+        int x = sx, y = sy;
+        int step = 0;
+        res.add(new Cell(x, y));
+        for (int i = 0; i < steps.length(); i ++ ) {
+            int d = steps.charAt(i) - '0';
+            x += dx[d];
+            y += dy[d];
+            res.add(new Cell(x, y));
+            if (!check_tail_increasing( ++ step)) {
+                res.remove(0);
             }
         }
         return res;

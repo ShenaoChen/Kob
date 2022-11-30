@@ -81,9 +81,9 @@ public class WebSocketServer {
                 13,
                 14,
                 20,
-                a.getId(),
+                aId,
                 botA,
-                b.getId(),
+                bId,
                 botB
         );
         game.createMap();
@@ -107,24 +107,28 @@ public class WebSocketServer {
         respA.put("opponent_username", b.getUsername());
         respA.put("opponent_photo", b.getPhoto());
         respA.put("game", respGame);
-        if (users.get(a.getId()) != null)
-            users.get(a.getId()).sendMessage(respA.toString());
+        if (users.get(aId) != null)
+            users.get(aId).sendMessage(respA.toString());
 
         JSONObject respB = new JSONObject();
         respB.put("event", "start_matching");
         respB.put("opponent_username", a.getUsername());
         respB.put("opponent_photo", a.getPhoto());
         respB.put("game", respGame);
-        if (users.get(b.getId()) != null)
-            users.get(b.getId()).sendMessage(respB.toString());
+        if (users.get(bId) != null)
+            users.get(bId).sendMessage(respB.toString());
     }
-    private void startMatching(Integer botId) {
+    private void startMatching(Integer botId, Integer isPvp) {
         System.out.println("start Matching!");
-        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
-        data.add("user_id", this.user.getId().toString());
-        data.add("rating", this.user.getRating().toString());
-        data.add("bot_id", botId.toString());
-        restTemplate.postForObject(addPlayUrl, data, String.class);
+        if (isPvp == 1) {
+            MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+            data.add("user_id", this.user.getId().toString());
+            data.add("rating", this.user.getRating().toString());
+            data.add("bot_id", botId.toString());
+            restTemplate.postForObject(addPlayUrl, data, String.class);
+        } else {
+            startGame(user.getId(), botId, 0, 0);
+        }
     }
 
     private void stopMatching() {
@@ -150,7 +154,8 @@ public class WebSocketServer {
         JSONObject data = JSONObject.parseObject(message);
         String event = data.getString("event");
         if ("start_matching".equals(event)) {
-            startMatching(data.getInteger("bot_id"));
+            System.out.println(data);
+            startMatching(data.getInteger("bot_id"), data.getInteger("is_pvp"));
         } else if ("stop_matching".equals(event)) {
             stopMatching();
         } else if ("move".equals(event)) {

@@ -80,7 +80,6 @@ public class Game extends Thread {
         }
     }
 
-
     boolean check(int sx, int sy, int tx, int ty) {
         if (sx == tx && sy == ty) {
             return true;
@@ -157,11 +156,22 @@ public class Game extends Thread {
     }
     private void sendBotCode(Player player) {
         if (player.getBotId().equals(-1)) return;
-        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
-        data.add("user_id", player.getId().toString());
-        data.add("bot_code", player.getBotCode());
-        data.add("input", getInput(player));
-        WebSocketServer.restTemplate.postForObject(addBotUrl, data, String.class);
+        if (player.getBotId().equals(0)) {
+            MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+            data.add("user_id", playerA.getId().toString());
+            data.add("bot_code", player.getBotCode());
+            data.add("input", getInput(player));
+            data.add("is_pvp", "0");
+            WebSocketServer.restTemplate.postForObject(addBotUrl, data, String.class);
+        } else {
+            MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+            data.add("user_id", player.getId().toString());
+            data.add("bot_code", player.getBotCode());
+            data.add("input", getInput(player));
+            data.add("is_pvp", "1");
+            WebSocketServer.restTemplate.postForObject(addBotUrl, data, String.class);
+        }
+
     }
 
     private boolean nextStep() {
@@ -308,7 +318,9 @@ public class Game extends Thread {
     @Override
     public void run() {
         try {
-            sleep(800);
+            if (!playerB.getId().equals(0)) {
+                sleep(800);
+            }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

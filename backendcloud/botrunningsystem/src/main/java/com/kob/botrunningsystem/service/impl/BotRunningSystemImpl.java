@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 public class BotRunningSystemImpl implements BotRunningService {
     public final static BotPool botPool = new BotPool();
     @Override
-    public String addBot(Integer userId, String botCode, String input) {
-        // System.out.println("add bot: " + userId + ' ' + botCode + ' ' + input);
-        botPool.addBot(userId, botCode, input);
+    public String addBot(Integer userId, Integer isPvp, String botCode, String input) {
+        //System.out.println("add bot: " + userId + ' ' + botCode + ' ' + input);
+        botPool.addBot(userId, isPvp, botCode, input);
         return "add bot success";
     }
 }
